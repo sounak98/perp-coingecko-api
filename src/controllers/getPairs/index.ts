@@ -15,7 +15,7 @@ const getPairs = async (req, res) => {
   const pairs: Array<IPair> = await Promise.all(
     ammInfos.map(async (amm) => {
       const fundingRateInfo = await getLastFundingInfo(amm.address);
-      const dailyPriceLogs = await getDailyPriceLogs(amm.address);
+      const dailyPriceLogs = await getDailyPriceLogs(amm.address, getTickerId(amm));
       const [minSpotPrice, maxSpotPrice] = getMaxMinSpotPrice(dailyPriceLogs);
       let nextFundingRateTimestamp;
       if (fundingRateInfo?.timestamp) {
@@ -34,7 +34,7 @@ const getPairs = async (req, res) => {
         target_currency: amm.quoteAssetSymbol,
         last_price: getSpotPrice(amm),
         product_type: "Perpetual",
-        funding_rate: fundingRateInfo?.rate && fundingRateInfo.rate * 1e-15,
+        funding_rate: fundingRateInfo?.rate && fundingRateInfo.rate * 1e-16,
         next_funding_rate_timestamp: nextFundingRateTimestamp,
         high: maxSpotPrice,
         low: minSpotPrice,

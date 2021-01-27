@@ -3,6 +3,13 @@
 ## Local Env
 
 ```sh
-$ yarn
-$ yarn dev
+$ npm install
+$ npm run dev
+```
+
+## Docker
+
+```sh
+$ docker build -t perp-coingecko-api .
+$ docker run -itp 80:5000 perp-coingecko-api
 ```
