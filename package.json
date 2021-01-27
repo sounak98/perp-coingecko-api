@@ -1,7 +1,7 @@
 {
   "name": "perp-coingecko-api",
   "version": "1.0.0",
-  "description": "",
+  "description": "Perpetual Protocol Coingecko API",
   "main": "dist/index.js",
   "scripts": {
     "build": "tsc",
@@ -12,14 +12,16 @@
     "type": "git",
     "url": "git+https://github.com/sounak98/perp-coingecko-api.git"
   },
-  "author": "",
-  "license": "ISC",
+  "author": "@nanspro, @sounak98, @nemani",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/sounak98/perp-coingecko-api/issues"
   },
   "homepage": "https://github.com/sounak98/perp-coingecko-api#readme",
   "dependencies": {
+    "@perp/contract": "^1.0.6",
     "cross-fetch": "^3.0.6",
+    "ethers": "^5.0.26",
     "express": "^4.17.1"
   },
   "devDependencies": {
