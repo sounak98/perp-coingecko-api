@@ -20,7 +20,7 @@ const getPairs = async (req, res) => {
       let nextFundingRateTimestamp;
       if (fundingRateInfo?.timestamp) {
         const nextFundingRateTime = new Date(
-          Number(fundingRateInfo.timestamp) * 1000
+          Number(fundingRateInfo.timestamp) * 1000 // converting to ms
         );
         nextFundingRateTime.setHours(nextFundingRateTime.getHours() + 1);
         nextFundingRateTimestamp = Math.floor(
@@ -29,7 +29,6 @@ const getPairs = async (req, res) => {
       }
 
       const pair: IPair = {
-        address: amm.address,
         ticker_id: getTickerId(amm),
         base_currency: amm.baseAssetSymbol,
         target_currency: amm.quoteAssetSymbol,

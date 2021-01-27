@@ -1,5 +1,4 @@
 export interface IPair {
-  address: string;
   ticker_id: string;
   base_currency: string;
   target_currency: string;
