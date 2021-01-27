@@ -17,6 +17,12 @@ const getPairs = async (req: Request, res: Response) => {
     // will be used to calculate 24hr high and 24 hr low (sorting on )
     const priceLogsMetadata = await getDailyPriceLogs()
     console.log(priceLogsMetadata)
+
+    // 24hr target volume
+    // Sigma(positionNotional)
+
+    // 24hr base bolume
+    // Sigma(positionNotional / spotPrice)
 };
 
 export default getPairs;

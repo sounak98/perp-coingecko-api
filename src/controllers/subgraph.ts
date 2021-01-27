@@ -27,12 +27,13 @@ export async function getDailyPriceLogs() {
         method: "POST",
         body: JSON.stringify({
             query: `{
-                positionChangedEvents(orderBy: blockNumber, orderDirection: desc, where: { amm_in: ["0x8d22F1a9dCe724D8c1B4c688D75f17A2fE2D32df"], 
+                positionChangedEvents(orderBy: timestamp, orderDirection: desc, where: { amm_in: ["0x8d22F1a9dCe724D8c1B4c688D75f17A2fE2D32df"], 
                     timestamp_lt: "1611773826", timestamp_gt: "1611773740"}) {
                 id
                 spotPrice
                 fundingPayment
                 timestamp
+                positionNotional
                 }
               }`
         })
