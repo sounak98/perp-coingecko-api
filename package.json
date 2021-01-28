@@ -5,8 +5,10 @@
   "main": "dist/index.js",
   "scripts": {
     "build": "tsc",
-    "start": "tsc & node .",
-    "dev": "tsc -w & nodemon ."
+    "start": "tsc && node .",
+    "dev": "tsc -w && nodemon .",
+    "listen": "tsc && node dist/listen.js",
+    "quick-deploy": "sh deploy.sh"
   },
   "repository": {
     "type": "git",
@@ -20,6 +22,8 @@
   "homepage": "https://github.com/sounak98/perp-coingecko-api#readme",
   "dependencies": {
     "@perp/contract": "^1.0.6",
+    "@types/aws-lambda": "^8.10.71",
+    "@vendia/serverless-express": "^4.0.0-rc.11",
     "cross-fetch": "^3.0.6",
     "ethers": "^5.0.26",
     "express": "^4.17.1"

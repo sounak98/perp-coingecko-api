@@ -1,2 +1,16 @@
-node_modules
 npm-debug.log
+iac
+.git 
+logs
+*.log
+pids
+*.pid
+*.seed
+lib-cov
+coverage
+.grunt
+.lock-wscript
+build/Release
+server/*.spec.js
+kubernetes
+dist
