@@ -21,7 +21,7 @@ export const getLastFundingInfo = async (address: any) => {
                   blockNumber
                   timestamp
                 }
-            }`,
+              }`,
     }),
   })
     .then((res) => res.json())
@@ -61,8 +61,8 @@ export async function getDailyPriceLogs(address, name) {
                     fundingPayment
                     timestamp
                     positionNotional
-                }
-              }`,
+                  }
+                }`,
       }),
     })
       .then((res) => res.json())
@@ -74,3 +74,21 @@ export async function getDailyPriceLogs(address, name) {
 
   return dailyPriceLogs;
 }
+
+export const getOpenInterest = async (address) => {
+  const openInterestNotional = await fetch(subgraphUrl, {
+    method: "POST",
+    body: JSON.stringify({
+      query: `{
+                amm(id: "${address.toLowerCase()}") {
+                  openInterestNotional
+                }
+              }`,
+    }),
+  })
+    .then((res) => res.json())
+    .then((resJson) => Number(resJson.data.amm.openInterestNotional) * 1e-18)
+    .catch(() => null);
+
+  return openInterestNotional;
+};

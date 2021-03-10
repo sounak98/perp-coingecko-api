@@ -1,6 +1,10 @@
 import type { IPair } from "../../schema";
 import { getAmmInfos } from "./amm";
-import { getDailyPriceLogs, getLastFundingInfo } from "./subgraph";
+import {
+  getDailyPriceLogs,
+  getLastFundingInfo,
+  getOpenInterest,
+} from "./subgraph";
 import {
   getSpotPrice,
   getTickerId,
@@ -15,7 +19,11 @@ const getPairs = async (req, res) => {
   const pairs: Array<IPair> = await Promise.all(
     ammInfos.map(async (amm) => {
       const fundingRateInfo = await getLastFundingInfo(amm.address);
-      const dailyPriceLogs = await getDailyPriceLogs(amm.address, getTickerId(amm));
+      const dailyPriceLogs = await getDailyPriceLogs(
+        amm.address,
+        getTickerId(amm)
+      );
+      const openInterest = await getOpenInterest(amm.address);
       const [minSpotPrice, maxSpotPrice] = getMaxMinSpotPrice(dailyPriceLogs);
       let nextFundingRateTimestamp;
       if (fundingRateInfo?.timestamp) {
@@ -40,6 +48,7 @@ const getPairs = async (req, res) => {
         low: minSpotPrice,
         target_volume: getTargetVolume(dailyPriceLogs),
         base_volume: getBaseVolume(dailyPriceLogs),
+        open_interest: openInterest,
       };
 
       return pair;
