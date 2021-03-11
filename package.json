@@ -2,13 +2,13 @@
   "name": "perp-coingecko-api",
   "version": "1.0.0",
   "description": "Perpetual Protocol Coingecko API",
-  "main": "dist/index.js",
+  "main": "build/index.js",
   "scripts": {
-    "build": "tsc",
-    "start": "tsc && node .",
-    "dev": "tsc -w && nodemon .",
-    "listen": "tsc && node dist/listen.js",
-    "quick-deploy": "sh deploy.sh"
+    "build": "rm -rf build && npx tsc && npm run build-dependencies",
+    "build-dependencies": "cp package*.json build/ && npm i --only=prod --prefix=build",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "listen": "npm run build && node ./build/listen.js",
+    "deploy": "sls deploy --debug"
   },
   "repository": {
     "type": "git",
@@ -23,9 +23,9 @@
   "dependencies": {
     "@perp/contract": "^1.0.6",
     "@types/aws-lambda": "^8.10.71",
-    "@vendia/serverless-express": "^4.0.0-rc.11",
     "cross-fetch": "^3.0.6",
     "ethers": "^5.0.26",
+    "serverless-http": "^2.7.0",
     "express": "^4.17.1"
   },
   "devDependencies": {

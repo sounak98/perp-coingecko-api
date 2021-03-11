@@ -1,11 +1,11 @@
-import fetch from "cross-fetch";
+import fetch from 'cross-fetch';
 
 const subgraphUrl =
-  "https://api.thegraph.com/subgraphs/name/perpetual-protocol/perp-position-subgraph";
+  'https://api.thegraph.com/subgraphs/name/perpetual-protocol/perp-position-subgraph';
 
 export const getLastFundingInfo = async (address: any) => {
   const fundingRateUpdatedEvents = await fetch(subgraphUrl, {
-    method: "POST",
+    method: 'POST',
     body: JSON.stringify({
       query: `{
                 fundingRateUpdatedEvents(
@@ -41,10 +41,10 @@ export async function getDailyPriceLogs(address, name) {
 
   let dailyPriceLogs = [];
   let _dailyPriceLogs;
-  let lastId = "";
+  let lastId = '';
   do {
     _dailyPriceLogs = await fetch(subgraphUrl, {
-      method: "POST",
+      method: 'POST',
       body: JSON.stringify({
         query: `{
                   positionChangedEvents(
@@ -68,7 +68,12 @@ export async function getDailyPriceLogs(address, name) {
       .then((res) => res.json())
       .then((resJson) => resJson.data.positionChangedEvents);
 
-    lastId = _dailyPriceLogs[_dailyPriceLogs.length - 1].id;
+    try {
+      lastId = _dailyPriceLogs[_dailyPriceLogs.length - 1].id;
+    } catch (err) {
+      console.log(err);
+    }
+
     dailyPriceLogs.push(..._dailyPriceLogs);
   } while (_dailyPriceLogs.length === 1000);
 
@@ -77,7 +82,7 @@ export async function getDailyPriceLogs(address, name) {
 
 export const getOpenInterest = async (address) => {
   const openInterestNotional = await fetch(subgraphUrl, {
-    method: "POST",
+    method: 'POST',
     body: JSON.stringify({
       query: `{
                 amm(id: "${address.toLowerCase()}") {

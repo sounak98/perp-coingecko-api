@@ -1,0 +1,14 @@
+org: perpexchange
+app: coingecko-api
+component: express
+name: express-starter
+
+inputs:
+  src:
+    src: ./
+    hook: npm run build
+    dist: build
+  timeout: 30
+  memory: 1024
+  domain: perp.gq
+  region: ap-south-1

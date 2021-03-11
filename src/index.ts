@@ -1,27 +1,26 @@
-import app from './app';
-import serverlessExpress = require('@vendia/serverless-express');
+import express from 'express';
+import getPairs from './controllers/getPairs';
 
-const contentTypes = [
-  'application/javascript',
-  'application/json',
-  'application/octet-stream',
-  'application/xml',
-  'font/eot',
-  'font/opentype',
-  'font/otf',
-  'image/jpeg',
-  'image/png',
-  'image/svg+xml',
-  'text/comma-separated-values',
-  'text/css',
-  'text/html',
-  'text/javascript',
-  'text/plain',
-  'text/text',
-  'text/xml',
-];
+const app = express();
+app.get('/pairs', getPairs);
 
-export const handler = serverlessExpress({
-  app,
-  binarySettings: { contentTypes },
-}).handler;
+// Routes
+app.get('/*', (req, res) => {
+  res.send(`Request received: ${req.method} - ${req.path}`);
+});
+
+// Error handler
+app.use(
+  (
+    err: any,
+    req: express.Request,
+    res: express.Response,
+    next: express.NextFunction
+  ) => {
+    console.error(err);
+    res.status(500).send('An internal server error occurred');
+  }
+);
+
+module.exports = app;
+export default app;

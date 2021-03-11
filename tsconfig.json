@@ -2,16 +2,13 @@
   "compilerOptions": {
     "module": "commonjs",
     "esModuleInterop": true,
-    "target": "es6",
+    "target": "es5",
     "noImplicitAny": false,
     "moduleResolution": "node",
     "sourceMap": true,
-    "outDir": "dist",
-    "resolveJsonModule": true,
-    "baseUrl": ".",
-    "paths": {
-      "*": ["node_modules/*"]
-    }
+    "allowJs": true,
+    "outDir": "./build/",
+    "resolveJsonModule": true
   },
   "include": ["src/**/*"]
 }
