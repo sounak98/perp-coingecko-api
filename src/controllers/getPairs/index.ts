@@ -48,7 +48,8 @@ const getPairs = async (req, res) => {
         low: minSpotPrice,
         target_volume: getTargetVolume(dailyPriceLogs),
         base_volume: getBaseVolume(dailyPriceLogs),
-        open_interest: openInterest,
+        open_interest: openInterest.size,
+        open_interest_notional: openInterest.notional,
       };
 
       return pair;

@@ -81,19 +81,24 @@ export async function getDailyPriceLogs(address, name) {
 }
 
 export const getOpenInterest = async (address) => {
-  const openInterestNotional = await fetch(subgraphUrl, {
-    method: 'POST',
+  const openInterest = await fetch(subgraphUrl, {
+    method: "POST",
     body: JSON.stringify({
       query: `{
                 amm(id: "${address.toLowerCase()}") {
+                  openInterestSize
                   openInterestNotional
                 }
               }`,
     }),
   })
     .then((res) => res.json())
-    .then((resJson) => Number(resJson.data.amm.openInterestNotional) * 1e-18)
+    .then((resJson) => ({
+      notional:
+        Number(resJson.data.amm.openInterestNotional) * 1e-18,
+      size: Number(resJson.data.amm.openInterestSize) * 1e-18,
+    }))
     .catch(() => null);
 
-  return openInterestNotional;
+  return openInterest;
 };

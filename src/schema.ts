@@ -9,6 +9,7 @@ export interface IPair {
   low: number; // lowest price in last 24hrs
   product_type: "Perpetual";
   open_interest: string;
+  open_interest_notional: string;
   funding_rate: number;
   next_funding_rate_timestamp?: string;
 }
