@@ -1,5 +1,5 @@
 import express from 'express';
-import getPairs from './controllers/getPairs';
+import functions from './controllers/getPairs';
 
 const app = express();
 app.get('/', (req, res) => {
@@ -17,7 +17,9 @@ app.get('/', (req, res) => {
   );
 });
 
-app.get('/pairs', getPairs);
+app.get('/pairs', functions.getPairs);
+
+app.get('/pnl', functions.getPnl);
 
 // Routes
 app.get('/*', (req, res) => {
