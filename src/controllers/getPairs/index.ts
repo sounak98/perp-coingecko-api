@@ -59,9 +59,4 @@ const getPairs = async (req, res) => {
   res.json({ pairs });
 };
 
-const getPnl = async (req, res) => {
-  res.json({ "a": "b" });
-};
-
-
-export default { getPnl, getPairs };
+export default getPairs;

@@ -1,8 +1,8 @@
-import express from 'express';
-import functions from './controllers/getPairs';
+import express from "express";
+import * as controllers from "./controllers";
 
 const app = express();
-app.get('/', (req, res) => {
+app.get("/", (req, res) => {
   res.send(
     `
     <h1>Welcome to Perp.exchange API for coingecko.</h1>
@@ -17,12 +17,11 @@ app.get('/', (req, res) => {
   );
 });
 
-app.get('/pairs', functions.getPairs);
-
-app.get('/pnl', functions.getPnl);
+app.get("/pairs", controllers.getPairs);
+app.get("/pnl", controllers.getPnl);
 
 // Routes
-app.get('/*', (req, res) => {
+app.get("/*", (req, res) => {
   res.send(`Request received: ${req.method} - ${req.path}`);
 });
 
@@ -35,7 +34,7 @@ app.use(
     next: express.NextFunction
   ) => {
     console.error(err);
-    res.status(500).send('An internal server error occurred');
+    res.status(500).send("An internal server error occurred");
   }
 );
 
