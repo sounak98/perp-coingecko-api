@@ -12,3 +12,5 @@ inputs:
   memory: 1024
   domain: perp.gq
   region: ap-south-1
+  env:
+    FONTCONFIG_PATH: '/var/task/fonts'
