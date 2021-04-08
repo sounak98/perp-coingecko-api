@@ -5,7 +5,7 @@
   "main": "build/index.js",
   "scripts": {
     "build": "rm -rf build && npx tsc && npm run build-dependencies",
-    "build-dependencies": "cp package*.json build/ && cp -r ./src/fonts ./build/fonts && cp -r ./src/controllers/getPnl/card.svg ./build/controllers/getPnl/card.svg && npm i --only=prod --prefix=build",
+    "build-dependencies": "cp package*.json build/ && cp -r ./src/fonts ./build/fonts && cp -r ./src/controllers/getPnl/card.svg ./build/controllers/getPnl/card.svg && npm i --ignore-scripts=false --unsafe-perm --verbose --only=prod --prefix=build",
     "test": "echo \"Error: no test specified\" && exit 1",
     "listen": "npm run build && node ./build/listen.js",
     "deploy": "sls deploy --debug"
@@ -27,6 +27,7 @@
     "ethers": "^5.0.26",
     "express": "^4.17.1",
     "handlebars": "^4.7.7",
+    "qrcode": "^1.4.4",
     "serverless-http": "^2.7.0",
     "sharp": "^0.28.1"
   },

@@ -1,8 +1,11 @@
 import { getRelevantPositionChangedEvents } from "./subgraph";
+import { getAmmInfos } from "../getPairs/amm";
+
 import * as handlebars from "handlebars";
 import * as fs from "fs";
 import * as path from "path";
 import sharp from "sharp";
+import QRCode from "qrcode";
 
 const getPnl = async (req, res, next) => {
   const trader: string = req.query.trader;
@@ -33,6 +36,10 @@ const getPnl = async (req, res, next) => {
 
   const green = "#40C87F";
   const red = "#EA6262";
+  const QrPngString = await QRCode.toDataURL(
+    `https://perp.exchange/ref/${trader}`
+  );
+
   const template = handlebars.compile(
     fs.readFileSync(path.join(__dirname, "./card.svg"), {
       encoding: "utf8",
@@ -40,24 +47,29 @@ const getPnl = async (req, res, next) => {
     })
   );
 
+  const ammInfos = await getAmmInfos();
+  const { quoteAssetSymbol, baseAssetSymbol, ...params } = ammInfos.filter(
+    (x) => x.address.toLowerCase() == amm.toLowerCase()
+  )[0];
+
   const data = {
     exitPrice: exitPrice.toFixed(1),
     entryPrice: entryPrice.toFixed(1),
     roi: roi.toFixed(1),
-    pair: "BTC/USDC",
+    pair: `${baseAssetSymbol}/${quoteAssetSymbol}`,
     roiColor: roi > 0 ? green : red,
     positionSideColor: finalPosition > 0 ? green : red,
     positionSide: finalPosition > 0 ? "LONG " : "SHORT ",
+    QrPngString,
   };
 
   const resultSvg = template(data);
-  console.log(resultSvg);
-  
-  const resultSvgBuffer = Buffer.from(resultSvg);
-  const resultPng = await sharp(resultSvgBuffer).toFormat("png").toBuffer();
-  const resultBase64Png = `data:image/png;base64,${resultPng.toString('base64')}`;
-  res.set('Content-Type', 'image/svg+xml')
-  res.end(resultSvgBuffer); 
+  const resultPng = await sharp(Buffer.from(resultSvg))
+    .toFormat("png")
+    .toBuffer();
+
+  res.set("Content-Type", "image/png");
+  res.send(resultPng);
 };
 
 export default getPnl;
