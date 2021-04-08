@@ -14,3 +14,7 @@ inputs:
   region: ap-south-1
   env:
     FONTCONFIG_PATH: '/var/task/fonts'
+    BINARY_CONTENT_TYPES: 'image/png, image/jpg'
+  layers:
+    - arn:aws:lambda:ap-south-1:353898341349:layer:sharp:1
+
