@@ -55,11 +55,9 @@ const getPnl = async (req, res, next) => {
   
   const resultSvgBuffer = Buffer.from(resultSvg);
   const resultPng = await sharp(resultSvgBuffer).toFormat("png").toBuffer();
-  const resultBase64Png = `data:image/png;base64,${resultPng.toString('base64')}`
-  
-  console.log(resultBase64Png);
-  res.writeHead(200, { "Content-Type": "image/png", 'Content-Length': resultPng.length});
-  res.end(resultPng);
+  const resultBase64Png = `data:image/png;base64,${resultPng.toString('base64')}`;
+  res.set('Content-Type', 'image/svg+xml')
+  res.end(resultSvgBuffer); 
 };
 
 export default getPnl;
