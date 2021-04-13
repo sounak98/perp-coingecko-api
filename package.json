@@ -5,7 +5,7 @@
   "main": "build/index.js",
   "scripts": {
     "build": "rm -rf build && npx tsc && npm run build-dependencies",
-    "build-dependencies": "cp package*.json build/ && cp -r ./src/fonts ./build/fonts && cp -r ./src/controllers/getPnl/card.svg ./build/controllers/getPnl/card.svg && npm i --ignore-scripts=false --unsafe-perm --verbose --only=prod --prefix=build",
+    "build-dependencies": "cp package*.json build/ && cp -r ./src/fonts ./build/fonts && npm i --ignore-scripts=false --unsafe-perm --verbose --only=prod --prefix=build",
     "test": "echo \"Error: no test specified\" && exit 1",
     "listen": "npm run build && node ./build/listen.js",
     "deploy": "sls deploy --debug"

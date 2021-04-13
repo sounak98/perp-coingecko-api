@@ -1,28 +1,46 @@
 import { getRelevantPositionChangedEvents } from "./subgraph";
-import { getAmmInfos } from "../getPairs/amm";
+import fetch from "cross-fetch";
 
-import * as handlebars from "handlebars";
-import * as fs from "fs";
-import * as path from "path";
 import sharp from "sharp";
 import QRCode from "qrcode";
+import template from "./card";
+
+let ammList = {}
+
+const getAmmForAddress = async (ammAddress) => {
+  if (ammAddress in ammList) {
+    return ammList[ammAddress]
+  }
+
+  const metadataUrl = "https://metadata.perp.exchange/production.json";
+  const metadata = await fetch(metadataUrl).then((res) => res.json());
+  const contracts = metadata["layers"]["layer2"]["contracts"]
+
+  Object.keys(contracts).forEach(item => {
+    const data = contracts[item]
+    if (data['name'] === 'Amm') {
+      ammList[data["address"].toLowerCase()] = { baseAssetSymbol: item.slice(0, -4), quoteAssetSymbol: item.slice(-4) }
+    }
+  })
+
+  return ammList[ammAddress]
+}
 
 const getPnl = async (req, res, next) => {
-  const trader: string = req.query.trader;
-  const amm: string = req.query.amm;
-  const blockNumber: string = req.query.blockNumber;
+
+  const trader: string = req.query.trader.toLowerCase();
+  const amm: string = req.query.amm.toLowerCase();
+  const blockNumber: string = req.query.blockNumber.toLowerCase();
 
   if (!trader || !amm || !blockNumber) {
     const err = new Error("Required query params missing");
     return next(err);
   }
-
   const relevantEvents = await getRelevantPositionChangedEvents(
     trader,
     amm,
     blockNumber
   );
-
   const entryPrice =
     Number(relevantEvents[relevantEvents.length - 1].spotPrice) * 1e-18;
   const exitPrice = Number(relevantEvents[0].spotPrice) * 1e-18;
@@ -33,24 +51,13 @@ const getPnl = async (req, res, next) => {
   const finalMargin = Number(relevantEvents[1].margin) * 1e-18;
   const finalPosition = Number(relevantEvents[1].positionSizeAfter) * 1e-18;
   const roi = (totalRealizedPnl / finalMargin) * 100;
+  const { quoteAssetSymbol, baseAssetSymbol } = await getAmmForAddress(amm);
 
   const green = "#40C87F";
   const red = "#EA6262";
   const QrPngString = await QRCode.toDataURL(
-    `https://perp.exchange/ref/${trader}`
+    `https://perp.exchange/t/${baseAssetSymbol}:${quoteAssetSymbol}`
   );
-
-  const template = handlebars.compile(
-    fs.readFileSync(path.join(__dirname, "./card.svg"), {
-      encoding: "utf8",
-      flag: "r",
-    })
-  );
-
-  const ammInfos = await getAmmInfos();
-  const { quoteAssetSymbol, baseAssetSymbol, ...params } = ammInfos.filter(
-    (x) => x.address.toLowerCase() == amm.toLowerCase()
-  )[0];
 
   const data = {
     exitPrice: exitPrice.toFixed(1),
