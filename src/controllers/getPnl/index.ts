@@ -5,29 +5,31 @@ import sharp from "sharp";
 import QRCode from "qrcode";
 import template from "./card";
 
-let ammList = {}
+let ammList = {};
 
 const getAmmForAddress = async (ammAddress) => {
   if (ammAddress in ammList) {
-    return ammList[ammAddress]
+    return ammList[ammAddress];
   }
 
   const metadataUrl = "https://metadata.perp.exchange/production.json";
   const metadata = await fetch(metadataUrl).then((res) => res.json());
-  const contracts = metadata["layers"]["layer2"]["contracts"]
+  const contracts = metadata["layers"]["layer2"]["contracts"];
 
-  Object.keys(contracts).forEach(item => {
-    const data = contracts[item]
-    if (data['name'] === 'Amm') {
-      ammList[data["address"].toLowerCase()] = { baseAssetSymbol: item.slice(0, -4), quoteAssetSymbol: item.slice(-4) }
+  Object.keys(contracts).forEach((item) => {
+    const data = contracts[item];
+    if (data["name"] === "Amm") {
+      ammList[data["address"].toLowerCase()] = {
+        baseAssetSymbol: item.slice(0, -4),
+        quoteAssetSymbol: item.slice(-4),
+      };
     }
-  })
+  });
 
-  return ammList[ammAddress]
-}
+  return ammList[ammAddress];
+};
 
 const getPnl = async (req, res, next) => {
-
   const trader: string = req.query.trader.toLowerCase();
   const amm: string = req.query.amm.toLowerCase();
   const blockNumber: string = req.query.blockNumber.toLowerCase();
@@ -41,6 +43,12 @@ const getPnl = async (req, res, next) => {
     amm,
     blockNumber
   );
+
+  if (relevantEvents.length < 1) {
+    res.sendStatus(404);
+    return;
+  }
+
   const entryPrice =
     Number(relevantEvents[relevantEvents.length - 1].spotPrice) * 1e-18;
   const exitPrice = Number(relevantEvents[0].spotPrice) * 1e-18;

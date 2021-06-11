@@ -39,6 +39,13 @@ export const getRelevantPositionChangedEvents = async (
     .then((res) => res.json())
     .then((resJson) => resJson.data.positionChangedEvents);
 
+  if (
+    positionChangedEvents.length < 1 ||
+    positionChangedEvents[0].blockNumber !== blockNumber
+  ) {
+    return [];
+  }
+
   let relevantPositionChangedEvents = [];
   let flag = false;
   for (let positionChangedEvent of positionChangedEvents) {
