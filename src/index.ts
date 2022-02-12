@@ -28,6 +28,7 @@ app.get("/", (req, res) => {
 
 app.get("/pairs", controllers.getPairs);
 app.get("/pnl", controllers.getPnl);
+app.get("/refBanner", controllers.getRefBanner);
 
 // Routes
 app.get("/*", (req, res) => {
